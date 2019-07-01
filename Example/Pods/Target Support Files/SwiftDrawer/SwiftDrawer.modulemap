@@ -1,0 +1,6 @@
+framework module SwiftDrawer {
+  umbrella header "SwiftDrawer-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "SwiftDrawer",
+  "version": "0.1.0",
+  "summary": "A short description of SwiftDrawer.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/MillmanY/SwiftDrawer",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "MillmanY": "millmanyang@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/MillmanY/SwiftDrawer.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "SwiftDrawer/Classes/**/*"
+}

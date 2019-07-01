@@ -1,0 +1,6 @@
+framework module Pods_SwiftDrawer_Example {
+  umbrella header "Pods-SwiftDrawer_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

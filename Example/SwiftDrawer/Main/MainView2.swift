@@ -10,8 +10,14 @@ import SwiftUI
 
 struct MainView2 : View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
-    }
+        NavigationView {
+            Button.init(action: {
+                print("Tap")
+            }) {
+                Text("MainView2")
+                }
+                .navigationBarTitle(Text("Main2"), displayMode: .inline)
+        }    }
 }
 
 #if DEBUG

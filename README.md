@@ -21,7 +21,7 @@
         }
     }
 
-## Control in subView
+## Control
       @EnvironmentObject public var drawerControl: DrawerControl
 
 

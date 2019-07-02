@@ -18,24 +18,18 @@ struct SliderView : View, SliderProtocol {
         GeometryReader { proxy in
             List {
                 HeaderView()
-                Text("Home").tapAction {
+                
+                SliderCell(imgName: "home", title: "Home").tapAction {
                     self.drawerControl.setMain(view: HomeView())
                     self.drawerControl.show(type: .leftRear, isShow: false)
-
-//                    self.status.currentStatus = .hide
                 }
-                Text("Account").tapAction {
-                    
-                    self.drawerControl.setMain(view: MainView2())
+                
+                SliderCell(imgName: "account", title: "Account").tapAction {
+                    self.drawerControl.setMain(view: AccountView())
                     self.drawerControl.show(type: .leftRear, isShow: false)
-//                    self.status.currentStatus = .hide
                 }
-                
-                
-                }
-            
+            }
         }
-        
     }
 }
 

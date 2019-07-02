@@ -9,11 +9,21 @@
 import SwiftUI
 
 struct SliderCell : View {
+    private let img: String
+    private let title: String
     var body: some View {
-        HStack {
-            
+        GeometryReader { proxy in
+            HStack {
+                Image.init(self.img).foregroundColor(.accentColor)
+                Text(self.title).foregroundColor(.init("titleColor"))
+            }
+            .frame(width: proxy.size.width, alignment: .leading)
         }
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+    }
+    
+    init(imgName: String, title: String) {
+        self.img = imgName
+        self.title = title
     }
 }
 

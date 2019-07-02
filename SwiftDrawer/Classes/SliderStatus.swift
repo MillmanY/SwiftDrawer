@@ -23,7 +23,8 @@ public class SliderStatus: BindableObject {
             }
         }
     }
-    public var showRate: Length = 0
+    var shadowRadius: Length = 0
+    var showRate: Length = 0
     public var currentStatus: ShowStatus = .hide {
         didSet {
             switch currentStatus {
@@ -34,9 +35,9 @@ public class SliderStatus: BindableObject {
             case .moving(let offset):
                 let width = parentSize.width/2
                 if self.type.isLeft {
-                    showRate = 1-(width-offset)/width
+                    showRate = self.type.isRear ? 1-(width-offset)/width : (width+offset)/width
                 } else {
-                    showRate = 1-(width+offset)/width
+                    showRate = (width-offset)/width
                 }
             }
             didChange.send(self)
@@ -72,7 +73,8 @@ public class SliderStatus: BindableObject {
             case .hide:
                 return self.type.isLeft ? -parentSize.width : parentSize.width
             case .moving(let offset):
-                return self.type.isLeft ? offset : parentSize.width-rearW+offset
+                let o = self.type.isLeft ? offset : parentSize.width-rearW+offset
+                return o
             case .show:
                 return self.type.isLeft ? 0 : parentSize.width-rearW
             }

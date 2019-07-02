@@ -12,7 +12,6 @@ struct MainContainer<Content: View> : View {
     @ObjectBinding private var leftRear: SliderStatus
     @ObjectBinding private var rightRear: SliderStatus
     
-    @State private var current: Length = 0
     @State private var gestureCurrent: Length = 0
     
     let main: AnyView
@@ -23,12 +22,14 @@ struct MainContainer<Content: View> : View {
         GeometryReader { proxy in
             self.generateBody(proxy: proxy)
         }.animation(.default)
+        
     }
     
     init(content: Content,
          maxMaskAlpha: Length = 0.25,
          maskEnable: Bool = true,
          drawerControl: DrawerControl) {
+        
         self.main = AnyView.init(content.environmentObject(drawerControl))
         self.maxMaskAlpha = maxMaskAlpha
         self.maskEnable = maskEnable
@@ -38,22 +39,24 @@ struct MainContainer<Content: View> : View {
     }
     
     func generateBody(proxy: GeometryProxy) -> some View {
+        let haveRear = self.leftRear.type != .none || self.rightRear.type != .none
+        let maxRadius = haveRear ? max(self.leftRear.shadowRadius, self.rightRear.shadowRadius) : 0
         let parentSize = proxy.size
-//        let topBotEdge = Length(proxy.safeAreaInsets.top + proxy.safeAreaInsets.bottom)
-        if self.leftRear.type != .none || self.rightRear.type != .none {
+        if haveRear {
             leftRear.parentSize = parentSize
             rightRear.parentSize = parentSize
         }
         
         return ZStack {
             self.main
-            if maskEnable {
+            if maskEnable && drawerControl.maxShowRate > 0 {
                 AnyView(Color.black.opacity(Double(drawerControl.maxShowRate*self.maxMaskAlpha)))
                     .tapAction {
                     self.drawerControl.hideAllSlider()
-                }
+                }.padding(EdgeInsets(top: -proxy.safeAreaInsets.top, leading: 0, bottom: -proxy.safeAreaInsets.bottom, trailing: 0))
             }
-        }.shadow(radius: 10)
+        }
+        .shadow(radius: maxRadius)
         .offset(x: self.offset, y: 0)
         .gesture(DragGesture().onChanged({ (value) in
             let will = self.offset + (value.translation.width-self.gestureCurrent)
@@ -102,6 +105,10 @@ struct MainContainer<Content: View> : View {
             }
         }
         return 0
+    }
+    
+    var maxShowRate: Length {
+        return max(self.leftRear.showRate, self.rightRear.showRate)
     }
 }
 

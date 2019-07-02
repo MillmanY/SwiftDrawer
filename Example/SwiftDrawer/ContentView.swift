@@ -11,9 +11,9 @@ import SwiftDrawer
 struct ContentView : View {
     var body: some View {
         Drawer()
-            .set(slider: SliderView(type: .leftRear))
-//            .set(slider: SliderView(type: .rightRear))
-            .set(main: HomeView())
+            .setSlider(view: SliderView(type: .leftRear))
+            .setSlider(view: Slider2View(type: .rightFront))
+            .setMain(view: HomeView())
     }
 }
 

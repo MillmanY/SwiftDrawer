@@ -17,21 +17,25 @@ struct SliderContainer<Content: SliderViewProtocol> : View {
     let type: SliderType
     var body: some View {
         GeometryReader { proxy in
-            self.generateSlider(parentSize: proxy.size)
+            self.generateBody(proxy: proxy)
         }
-
     }
     
-    func generateSlider(parentSize: CGSize) -> some View {
-        
+    func generateBody(proxy: GeometryProxy) -> some View {
+        let parentSize = proxy.size
         self.status.parentSize = parentSize
         switch self.status.type {
         case .leftFront,  .rightFront:
-            let view = self.slider
-                .frame(maxWidth:
+            let view = ZStack {
+                AnyView(Color.white).frame(maxWidth:
                     self.status.sliderWidth)
+                .padding(EdgeInsets(top: -proxy.safeAreaInsets.top, leading: 0, bottom: -proxy.safeAreaInsets.bottom, trailing: 0))
+                self.slider
+                    .frame(maxWidth:
+                        self.status.sliderWidth)
+                }
+                .shadow(radius: self.status.showRate > 0 ? self.status.shadowRadius : 0)
                 .offset(x: self.status.sliderOffset() , y: 0)
-                .animation(.default)
                 .gesture(DragGesture().onChanged({ (value) in
                     if self.status.type.isLeft && value.translation.width < 0 {
                         self.status.currentStatus = .moving(offset: value.translation.width)
@@ -47,11 +51,11 @@ struct SliderContainer<Content: SliderViewProtocol> : View {
                         self.status.currentStatus = value.location.x > sliderW ? .hide : .show
                     }
                 }))
-            return AnyView(view)
+                .animation(.default)
+            return AnyView.init(view)
         case .leftRear, .rightRear:
             let view = self.slider
                 .offset(x: self.status.type.isLeft ? 0 : parentSize.width-self.status.sliderWidth, y: 0)
-                .animation(.default)
                 .frame(maxWidth: self.status.sliderWidth)
             return AnyView(view)
         case .none:
@@ -59,7 +63,6 @@ struct SliderContainer<Content: SliderViewProtocol> : View {
         }
     }
     
-
     init(content: Content, drawerControl: DrawerControl) {
         self.slider = AnyView.init(content.environmentObject(drawerControl))
         self.type = content.type

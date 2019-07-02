@@ -22,14 +22,16 @@ public struct Drawer: View {
     }
     
     @discardableResult
-    public func set<Main: View>(main: Main) -> Drawer {
-        drawerControl.setMain(view: main)
+    public func setMain<Main: View>(view: Main) -> Drawer {
+        drawerControl.setMain(view: view)
         return self
     }
     
     @discardableResult
-    public func set<Slider: SliderViewProtocol>(slider: Slider) -> Drawer{
-        drawerControl.setSlider(view: slider)
+    public func setSlider<Slider: SliderViewProtocol>(view: Slider,
+                                                widthType: SliderWidth = .percent(rate: 0.6),
+                                                shadowRadius: Length = 10) -> Drawer{
+        drawerControl.setSlider(view: view, widthType: widthType, shadowRadius: shadowRadius)
         return self
     }
     
@@ -56,8 +58,8 @@ public struct DemoSlider: View, SliderProtocol {
 
 struct Drawer_Previews : PreviewProvider {
     static var previews: some View {
-        Drawer().set(main: DemoMain())
-                .set(slider: DemoSlider.init(type: .leftRear))
+        Drawer().setMain(view: DemoMain())
+                .setSlider(view: DemoSlider.init(type: .leftRear))
     }
 }
 #endif

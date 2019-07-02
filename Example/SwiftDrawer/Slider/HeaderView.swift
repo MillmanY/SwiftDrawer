@@ -15,7 +15,7 @@ struct HeaderView : View {
             VStack(alignment: .leading) {
                 Text("Millman")
                 Text("mm@gmail.com")
-            }
+            }.foregroundColor(.init("titleColor"))
         }
     }
 }

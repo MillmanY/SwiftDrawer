@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 import Combine
-public class DrawerControl: BindableObject {
-    public let didChange = PassthroughSubject<DrawerControl, Never>()
+public class DrawerControl: ObservableObject {
+//    public let objectDidChange = PassthroughSubject<DrawerControl, Never>()
     
-    private var statusObserver = [Subscribers.Sink<PassthroughSubject<SliderStatus,Never>>]()
+    private var statusObserver = [AnyCancellable]()
     private(set) var status = [SliderType: SliderStatus]() {
         didSet {
             statusObserver.forEach {
@@ -19,7 +19,7 @@ public class DrawerControl: BindableObject {
             }
             statusObserver.removeAll()
             status.forEach { (info) in
-                let observer = info.value.didChange.sink { [weak self](s) in
+                let observer = info.value.objectDidChange.sink { [weak self](s) in
                     let maxRate = self?.status.sorted { (s0, s1) -> Bool in
                         s0.value.showRate > s1.value.showRate
                         }.first?.value.showRate ?? 0
@@ -32,27 +32,16 @@ public class DrawerControl: BindableObject {
             }
         }
     }
-    
-    private(set) var sliderView = [SliderType: AnyView]() {
-        didSet {
-            didChange.send(self)
-        }
-    }
-
-    private(set) var main: AnyView? {
-        didSet {
-            didChange.send(self)
-        }
-    }
-    private(set) var maxShowRate: Length = .zero {
-        didSet {
-            didChange.send(self)
-        }
-    }
+    @Published
+    private(set) var sliderView = [SliderType: AnyView]()
+    @Published
+    private(set) var main: AnyView?
+    @Published
+    private(set) var maxShowRate: CGFloat = .zero
 
     public func setSlider<Slider: SliderViewProtocol>(view: Slider,
                                                       widthType: SliderWidth = .percent(rate: 0.6),
-                                                      shadowRadius: Length = 10) {
+                                                      shadowRadius: CGFloat = 10) {
         let status = SliderStatus(type: view.type)
         
         status.maxWidth = widthType

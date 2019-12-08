@@ -15,10 +15,10 @@ struct HomeView : View {
         NavigationView {
     
             Text("Home View in Main")
-                .navigationBarTitle(Text("Home"), displayMode: .inline)
-                .navigationBarItems(leading: Image("menu").tapAction {
+                .navigationBarTitle(Text("Home"), displayMode: .automatic)
+                .navigationBarItems(leading: Image("menu").onTapGesture(perform: {
                     self.control.show(type: .leftRear, isShow: true)
-                }, trailing: Text("right").tapAction {
+                }), trailing: Text("right").onTapGesture {
                     self.control.show(type: .rightFront, isShow: true)
                 })
         }

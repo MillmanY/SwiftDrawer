@@ -24,14 +24,14 @@ public enum SliderType {
 }
 
 public enum SliderWidth {
-    case width(value: Length)
-    case percent(rate: Length)
+    case width(value: CGFloat)
+    case percent(rate: CGFloat)
 }
 
 public enum ShowStatus {
     case show
     case hide
-    case moving(offset: Length)
+    case moving(offset: CGFloat)
     
     var isMoving: Bool {
         switch self {

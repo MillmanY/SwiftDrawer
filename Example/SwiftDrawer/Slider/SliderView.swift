@@ -15,21 +15,24 @@ struct SliderView : View, SliderProtocol {
         self.type = type
     }
     var body: some View {
-        GeometryReader { proxy in
-            List {
-                HeaderView()
-                
-                SliderCell(imgName: "home", title: "Home").tapAction {
-                    self.drawerControl.setMain(view: HomeView())
-                    self.drawerControl.show(type: .leftRear, isShow: false)
-                }
-                
-                SliderCell(imgName: "account", title: "Account").tapAction {
-                    self.drawerControl.setMain(view: AccountView())
-                    self.drawerControl.show(type: .leftRear, isShow: false)
-                }
+        
+        List {
+            HeaderView()
+            
+            SliderCell(imgName: "home", title: "Home").onTapGesture {
+                self.drawerControl.setMain(view: HomeView())
+                self.drawerControl.show(type: .leftRear, isShow: false)
+            }.onAppear {
+                    
+            }
+            
+            SliderCell(imgName: "account", title: "Account").onTapGesture {
+                self.drawerControl.setMain(view: AccountView())
+                self.drawerControl.show(type: .leftRear, isShow: false)
             }
         }
+        
+        
     }
 }
 

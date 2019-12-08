@@ -10,8 +10,8 @@ import SwiftUI
 import Combine
 
 struct SliderContainer<Content: SliderViewProtocol> : View {
-    @ObjectBinding public var control: DrawerControl
-    @ObjectBinding private var status: SliderStatus
+    @ObservedObject public var control: DrawerControl
+    @ObservedObject private var status: SliderStatus
     
     let slider: AnyView
     let type: SliderType

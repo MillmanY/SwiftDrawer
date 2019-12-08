@@ -7,17 +7,18 @@
 //
 
 import SwiftUI
+import Combine
 struct MainContainer<Content: View> : View {
-    @ObjectBinding private var drawerControl: DrawerControl
-    @ObjectBinding private var leftRear: SliderStatus
-    @ObjectBinding private var rightRear: SliderStatus
+    @ObservedObject private var drawerControl: DrawerControl
+    @ObservedObject private var leftRear: SliderStatus
+    @ObservedObject private var rightRear: SliderStatus
     
-    @State private var gestureCurrent: Length = 0
+    @State private var gestureCurrent: CGFloat = 0
     
     let main: AnyView
-    private var maxMaskAlpha: Length
+    private var maxMaskAlpha: CGFloat
     private var maskEnable: Bool
-    
+    var anyCancel: AnyCancellable?
     var body: some View {
         GeometryReader { proxy in
             self.generateBody(proxy: proxy)
@@ -26,7 +27,7 @@ struct MainContainer<Content: View> : View {
     }
     
     init(content: Content,
-         maxMaskAlpha: Length = 0.25,
+         maxMaskAlpha: CGFloat = 0.25,
          maskEnable: Bool = true,
          drawerControl: DrawerControl) {
         
@@ -46,18 +47,17 @@ struct MainContainer<Content: View> : View {
             leftRear.parentSize = parentSize
             rightRear.parentSize = parentSize
         }
-        
         return ZStack {
             self.main
             if maskEnable && drawerControl.maxShowRate > 0 {
                 AnyView(Color.black.opacity(Double(drawerControl.maxShowRate*self.maxMaskAlpha)))
-                    .tapAction {
+                    .onTapGesture {
                     self.drawerControl.hideAllSlider()
                 }.padding(EdgeInsets(top: -proxy.safeAreaInsets.top, leading: 0, bottom: -proxy.safeAreaInsets.bottom, trailing: 0))
             }
         }
-        .shadow(radius: maxRadius)
         .offset(x: self.offset, y: 0)
+        .shadow(radius: maxRadius)
         .gesture(DragGesture().onChanged({ (value) in
             let will = self.offset + (value.translation.width-self.gestureCurrent)
             if self.leftRear.type != .none {
@@ -67,7 +67,7 @@ struct MainContainer<Content: View> : View {
                     self.gestureCurrent = value.translation.width
                 }
             }
-            
+
             if self.rightRear.type != .none {
                 let range = (-self.rightRear.sliderWidth)...0
                 if range.contains(will) {
@@ -89,7 +89,7 @@ struct MainContainer<Content: View> : View {
         }))
     }
     
-    var offset: Length {
+    var offset: CGFloat {
         switch (self.leftRear.currentStatus, self.rightRear.currentStatus) {
         case (.hide, .hide):
             return 0
@@ -107,7 +107,7 @@ struct MainContainer<Content: View> : View {
         return 0
     }
     
-    var maxShowRate: Length {
+    var maxShowRate: CGFloat {
         return max(self.leftRear.showRate, self.rightRear.showRate)
     }
 }

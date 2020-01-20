@@ -47,10 +47,12 @@ struct MainContainer<Content: View> : View {
             leftRear.parentSize = parentSize
             rightRear.parentSize = parentSize
         }
+        
         return ZStack {
             self.main
-            if maskEnable && drawerControl.maxShowRate > 0 {
-                AnyView(Color.black.opacity(Double(drawerControl.maxShowRate*self.maxMaskAlpha)))
+            if maskEnable {
+               Color.black.opacity(Double(drawerControl.maxShowRate*self.maxMaskAlpha))
+                .animation(.easeIn(duration: 0.15))
                     .onTapGesture {
                     self.drawerControl.hideAllSlider()
                 }.padding(EdgeInsets(top: -proxy.safeAreaInsets.top, leading: 0, bottom: -proxy.safeAreaInsets.bottom, trailing: 0))
@@ -123,8 +125,6 @@ struct MainContainer_Previews : PreviewProvider {
         let c = DrawerControl()
         c.setSlider(view: view)
         return MainContainer.init(content: DemoMain(), drawerControl: c)
-
     }
-
 }
 #endif
